@@ -2,7 +2,7 @@ var soap = require('soap');
 var express = require('express');
 var app = express();
 var router = express.Router();
-var url = 'http://localhost:8000/?wsdl';
+var url = 'https://vehicules-soap.herokuapp.com/?wsdl';
 var args = {};
 
 // set the view engine to ejs
