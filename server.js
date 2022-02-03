@@ -5,6 +5,8 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const path = require('path');
+const axios = require('axios');
+const { emit } = require('process');
 const io = new Server(server);
 var url = 'https://vehicules-soap.herokuapp.com/?wsdl';
 var args = {};
@@ -29,24 +31,17 @@ io.on('connection', (socket) => {
         console.log('user disconnected');
     });
 
-
+    socket.on('callApiDistance', (dist, autonomy, chargingTime) => {
+        axios.get('https://parcours-api.herokuapp.com/parcours?dist=' + dist + '&tps_recharge=' + chargingTime + '&autonomy=' + autonomy)
+            .then(response => {
+                time = response.data.res;
+                io.emit('displayTime', Math.floor(time / 60), time % 60)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    })
 })
-
-// const promise = new Promise((resolve, reject) => {
-//     soap.createClient(url, function (err, client) {
-//         client.all_vehicule(args, function (err, result) {
-//             resolve(result["all_vehiculeResult"]["data"]);
-//         })
-//     })
-// })
-// promise.then((value) => {
-//     router.get('/', function (req, res) {
-//         res.render('index', {
-//             vehicules: value
-//         })
-//     })
-// })
-
 
 
 server.listen(process.env.PORT || 3000);

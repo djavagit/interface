@@ -20,7 +20,16 @@
         </div>
     </div>
     <div>
-
+        <div>
+            Distance
+            <input type="number" name="dist" id="dist">
+        </div>
+        <div>
+            <button onclick="callApiDistance()">Calculer distance</button>
+        </div>
+        <div id="result-time">
+            Pas de résultats
+        </div>
     </div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
@@ -28,16 +37,25 @@
 <script>
     var socket = io();
     let vehicules = [];
+    let v = null;
     let vec_content = document.getElementById('vehicules-content');
+    let select = document.getElementById('vehicules');
+    let dist = document.getElementById('dist');
+    let result_time = document.getElementById('result-time');
 
-    function updateContent(select) {
-        let v = vehicules.find(v => v.name === select.value)
+    function updateContent(sel) {
+        v = vehicules.find(v => v.name === sel.value)
         vec_content.innerHTML = "Autonomie : " + v.autonomy + "<br>Temps de chargement : " + v.chargingTime;
+    }
+
+    function callApiDistance() {
+        if (select.selectedIndex > 0 && dist.value > 0) {
+            socket.emit('callApiDistance', dist.value, v.autonomy, v.chargingTime);
+        }
     }
 
     socket.on('vehicules', (vec) => {
         vehicules = vec
-        let select = document.getElementById('vehicules')
         for (let i = 0; i < vehicules.length; i++) {
             let v = vehicules[i];
             console.log(v);
@@ -46,6 +64,10 @@
             opt.text = v.name;
             select.add(opt, null);
         }
+    })
+
+    socket.on('displayTime', (hours, minutes) => {
+        result_time.innerHTML = hours + " heures et " + minutes + " minutes";
     })
 </script>
 
