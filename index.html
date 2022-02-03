@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyage</title>
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <div>
+        Choisir un véhicule :
+        <select id="vehicules" onchange="updateContent(this)">
+            <option selected="selected" value="default">Séléctionner un véhicule</option>
+        </select>
+        <div id="vehicules-content" class="vehicules-content">
+            Autonomie : <br>Temps de chargement :
+        </div>
+    </div>
+    <div>
+
+    </div>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script>
+    var socket = io();
+    let vehicules = [];
+    let vec_content = document.getElementById('vehicules-content');
+
+    function updateContent(select) {
+        let v = vehicules.find(v => v.name === select.value)
+        vec_content.innerHTML = "Autonomie : " + v.autonomy + "<br>Temps de chargement : " + v.chargingTime;
+    }
+
+    socket.on('vehicules', (vec) => {
+        vehicules = vec
+        let select = document.getElementById('vehicules')
+        for (let i = 0; i < vehicules.length; i++) {
+            let v = vehicules[i];
+            console.log(v);
+            let opt = document.createElement("option");
+            opt.value = v.name;
+            opt.text = v.name;
+            select.add(opt, null);
+        }
+    })
+</script>
+
+</html>
