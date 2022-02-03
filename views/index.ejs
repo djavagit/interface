@@ -26,14 +26,20 @@
 </body>
 <script>
     let vec_content = document.getElementById('vehicules-content');
+
+    function findVehicule(vehicules, name) {
+        for (v in vehicules) {
+            if (v.name === name) {
+                return v;
+            }
+        }
+        return null;
+    }
+
     function updateContent(select, vehicules) {
         let name = select.value;
-        console.log(name);
-        console.log(vehicules);
-        console.log(vehicules[0]);
-        console.log(vehicules.split());
-        console.log(typeof vehicules);
-        console.log(vehicules.split().find(v => v.name === name));
+        vehicule = findVehicule(vehicules, name);
+        console.log(vehicules)
     }
 </script>
 
