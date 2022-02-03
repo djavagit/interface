@@ -12,7 +12,8 @@
 <body>
     <div>
         Choisir un véhicule :
-        <select name="vehicules" onchange="updateContent(this, '<%= vehicules %>')">
+        <select name="vehicules" onchange="updateContent(this, '<%= JSON.stringify(vehicules) %>')">
+            <option selected="selected" value="default">Séléctionner un véhicule</option>
             <% vehicules.forEach(function(v){ %>
                 <option value="<%= v.name %>">
                     <%= v.name %>
@@ -20,29 +21,19 @@
                 <% }); %>
         </select>
         <div id="vehicules-content" class="vehicules-content">
-
+            Autonomie : <br>Temps de chargement :
         </div>
     </div>
 </body>
 <script>
     let vec_content = document.getElementById('vehicules-content');
 
-    function findVehicule(vehicules, name) {
-        for (v in vehicules) {
-            console.log(v);
-            console.log(v.name);
-            if (v.name === name) {
-                return v;
-            }
-        }
-        return null;
-    }
-
     function updateContent(select, vehicules) {
         let name = select.value;
-        vehicule = findVehicule(vehicules, name);
+        vehicules = JSON.parse(vehicules)
+        vehicule = vehicules.find(v => v.name === name)
         console.log(vehicule);
-        console.log(vehicules);
+        vec_content.innerHTML = "Autonomie : " + vehicule.autonomy + "<br>Temps de chargement : " + vehicule.chargingTime;
     }
 </script>
 
