@@ -12,7 +12,7 @@
 <body>
     <div>
         Choisir un véhicule :
-        <select name="vehicules" onchange="updateContent(this, vehicules)">
+        <select name="vehicules" onchange="updateContent(this, '<%= vehicules %>')">
             <% vehicules.forEach(function(v){ %>
                 <option value="<%= v.name %>">
                     <%= v.name %>
