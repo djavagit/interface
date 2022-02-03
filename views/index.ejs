@@ -5,24 +5,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Voyage</title>
     <script src="index.js"></script>
 </head>
 
 <body>
     <div>
         Choisir un véhicule :
-        <select name="vehicules">
+        <select name="vehicules" onchange="updateContent(this, vehicules)">
             <% vehicules.forEach(function(v){ %>
                 <option value="<%= v.name %>">
                     <%= v.name %>
                 </option>
                 <% }); %>
         </select>
-        <div class="vehicules-content">
-            <%= v.chargingTime %>
+        <div id="vehicules-content" class="vehicules-content">
+
         </div>
     </div>
 </body>
+<script>
+    let vec_content = document.getElementById('vehicules-content');
+    function updateContent(select, vehicules) {
+        let name = select.value;
+        console.log(name);
+    }
+</script>
 
 </html>
