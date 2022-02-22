@@ -6,7 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voyage</title>
-    <script src="index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin="">
+        </script>
 </head>
 
 <body>
@@ -31,9 +38,14 @@
             Pas de résultats
         </div>
     </div>
+    <div>
+        <input type="text" name="latitude" id="latitude">
+        <input type="text" name="longitude" id="longitude">
+        <input type="button" onclick="callTraceRoute()" value="trace">
+    </div>
+    <div id="map"></div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
-<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script>
     var socket = io();
     let vehicules = [];
@@ -42,6 +54,13 @@
     let select = document.getElementById('vehicules');
     let dist = document.getElementById('dist');
     let result_time = document.getElementById('result-time');
+
+    var map = L.map('map').setView([8.687872, 49.420318], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
 
     function updateContent(sel) {
         v = vehicules.find(v => v.name === sel.value)
@@ -54,11 +73,14 @@
         }
     }
 
+    function callTraceRoute() {
+        socket.emit('callTraceRoute');
+    }
+
     socket.on('vehicules', (vec) => {
-        vehicules = vec
+        vehicules = vec;
         for (let i = 0; i < vehicules.length; i++) {
             let v = vehicules[i];
-            console.log(v);
             let opt = document.createElement("option");
             opt.value = v.name;
             opt.text = v.name;
@@ -68,6 +90,10 @@
 
     socket.on('displayTime', (hours, minutes) => {
         result_time.innerHTML = hours + " heures et " + minutes + " minutes";
+    })
+
+    socket.on('traceRoute', (coords) => {
+        L.polyline(coords).addTo(map)
     })
 </script>
 

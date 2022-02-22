@@ -7,6 +7,7 @@
     "axios": "^0.25.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
+    "openrouteservice-js": "^0.1.31",
     "pug": "^3.0.2",
     "soap": "^0.43.0",
     "socket.io": "^4.4.1"
