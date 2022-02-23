@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "all-the-cities": "^3.1.0",
     "axios": "^0.25.0",
+    "country-list": "^2.2.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
     "openrouteservice-js": "^0.1.31",

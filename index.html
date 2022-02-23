@@ -39,8 +39,12 @@
         </div>
     </div>
     <div>
-        <input type="text" name="latitude" id="latitude">
-        <input type="text" name="longitude" id="longitude">
+        <div>
+            <input type="text" name="start" id="start">
+        </div>
+        <div>
+            <input type="text" name="end" id="end">
+        </div>
         <input type="button" onclick="callTraceRoute()" value="trace">
     </div>
     <div id="map"></div>
@@ -54,8 +58,10 @@
     let select = document.getElementById('vehicules');
     let dist = document.getElementById('dist');
     let result_time = document.getElementById('result-time');
+    let start = document.getElementById('start');
+    let end = document.getElementById('end');
 
-    var map = L.map('map').setView([8.687872, 49.420318], 13);
+    var map = L.map('map').setView([48.856767, 2.351083], 5);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -74,7 +80,7 @@
     }
 
     function callTraceRoute() {
-        socket.emit('callTraceRoute');
+        socket.emit('callTraceRoute', start.value, end.value);
     }
 
     socket.on('vehicules', (vec) => {
@@ -92,8 +98,9 @@
         result_time.innerHTML = hours + " heures et " + minutes + " minutes";
     })
 
-    socket.on('traceRoute', (coords) => {
-        L.polyline(coords).addTo(map)
+    socket.on('traceRoute', (coords, lon, lat) => {
+        L.polyline(coords).addTo(map);
+        L.setView([lat, lon], 5)
     })
 </script>
 
