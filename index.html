@@ -62,11 +62,18 @@
     let end = document.getElementById('end');
 
     var map = L.map('map').setView([48.856767, 2.351083], 5);
+    var route = null;
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+
+    function removeLayers() {
+        if (route != null) {
+            map.removeLayer(route);
+        }
+    }
 
     function updateContent(sel) {
         v = vehicules.find(v => v.name === sel.value)
@@ -80,6 +87,7 @@
     }
 
     function callTraceRoute() {
+        removeLayers();
         socket.emit('callTraceRoute', start.value, end.value);
     }
 
@@ -99,8 +107,9 @@
     })
 
     socket.on('traceRoute', (coords, lon, lat) => {
-        L.polyline(coords).addTo(map);
-        L.setView([lat, lon], 5)
+        route = L.polyline(coords);
+        route.addTo(map);
+        map.setView([lat, lon], 5)
     })
 </script>
 
