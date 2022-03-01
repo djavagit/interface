@@ -1,6 +1,47 @@
 /* css */
 
 #map{
-    height: 75vh;
-    width: 75vw;
+    height: 80vh;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    grid-area: b;
+}
+
+.title{
+    display: grid;
+    justify-content: center;
+}
+.wrapper{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template: 
+    "a b b b";
+    margin: 1rem;
+}
+.wrapper div{
+    margin-bottom: 1rem;
+}
+
+.infos{
+    padding-right: 1rem;
+    grid-area: a;
+    width: 100%;
+}
+
+.actions{
+    display: flex;
+    justify-content: space-between;
+}
+
+.select{
+    margin: 1em 0 1em 0;
+    width: 100%;
+}
+@media (max-width: 480px) {
+    .wrapper{
+        grid-template-columns: 1fr;
+        grid-template: 
+        "a"
+        "b";
+    }
 }

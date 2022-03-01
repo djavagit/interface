@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voyage</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -17,38 +18,47 @@
 </head>
 
 <body>
-    <div>
-        Choisir un véhicule :
-        <select id="vehicules" onchange="updateContent(this)">
-            <option selected="selected" value="default">Séléctionner un véhicule</option>
-        </select>
-        <div id="vehicules-content" class="vehicules-content">
-            Autonomie : <br>Temps de chargement :
+    <h1 class="title is-1">TP info802</h1>
+    <div class="wrapper">
+        <div class="infos">
+            <div>
+                <label class="label">Choisir un véhicule :</label>
+                <select class="select" id="vehicules" onchange="updateContent(this)">
+                    <option selected="selected" value="default">Séléctionner un véhicule</option>
+                </select>
+                <div id="vehicules-content" class="vehicules-content">
+                    Autonomie : <br>Temps de chargement :
+                </div>
+            </div>
+            <div>
+                <div>
+                    <label class="label">Distance</label>
+                    <input class="input is-normal" type="number" name="dist" id="dist">
+                </div>
+                <div>
+                    <button class="button is-normal is-info" onclick="callApiDistance()">Calculer distance</button>
+                </div>
+                <div id="result-time">
+                    Pas de résultats
+                </div>
+            </div>
+            <div>
+                <div>
+                    <label class="label">Départ</label>
+                    <input class="input is-normal" type="text" name="start" id="start">
+                </div>
+                <div>
+                    <label class="label">Arrivée</label>
+                    <input class="input is-normal" type="text" name="end" id="end">
+                </div>
+                <div class="actions">
+                    <input class="button is-normal is-link" type="button" onclick="callTraceRoute()" value="Trace">
+                    <input class="button is-normal is-link" type="button" onclick="callTracePoints()" value="Bornes">
+                </div>
+            </div>
         </div>
+        <div id="map"></div>
     </div>
-    <div>
-        <div>
-            Distance
-            <input type="number" name="dist" id="dist">
-        </div>
-        <div>
-            <button onclick="callApiDistance()">Calculer distance</button>
-        </div>
-        <div id="result-time">
-            Pas de résultats
-        </div>
-    </div>
-    <div>
-        <div>
-            <input type="text" name="start" id="start">
-        </div>
-        <div>
-            <input type="text" name="end" id="end">
-        </div>
-        <input type="button" onclick="callTraceRoute()" value="Trace">
-        <input type="button" onclick="callTracePoints()" value="Bornes">
-    </div>
-    <div id="map"></div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -130,7 +140,7 @@
     })
 
     socket.on('traceRoute', (coords, lon, lat, distance) => {
-        dist.value = distance;
+        dist.value = Math.round(distance);
         coordinates = coords;
         route = L.polyline(coords);
         route.addTo(map);

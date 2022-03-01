@@ -7,7 +7,6 @@ const { Server } = require("socket.io");
 const path = require('path');
 const axios = require('axios');
 const io = new Server(server);
-const cl = require('country-list');
 var url = 'https://vehicules-soap.herokuapp.com/?wsdl';
 var args = {};
 let vehicules = [];
@@ -68,7 +67,6 @@ io.on('connection', (socket) => {
             .finally(() => {
                 axios.get('https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf624835290f82bf4643548cfbf31e939c3b43&start=' + start_lon + ',' + start_lat + '&end=' + end_lon + ',' + end_lat)
                     .then(response => {
-                        console.log(response.data.features[0].properties.summary.distance);
                         let res = switchLonLat(response.data.features[0].geometry.coordinates);
                         io.emit('traceRoute', res, start_lon, start_lat, response.data.features[0].properties.summary.distance / 1000);
                     })
