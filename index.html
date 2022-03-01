@@ -45,7 +45,8 @@
         <div>
             <input type="text" name="end" id="end">
         </div>
-        <input type="button" onclick="callTraceRoute()" value="trace">
+        <input type="button" onclick="callTraceRoute()" value="Trace">
+        <input type="button" onclick="callTracePoints()" value="Bornes">
     </div>
     <div id="map"></div>
 </body>
@@ -63,6 +64,8 @@
 
     var map = L.map('map').setView([48.856767, 2.351083], 5);
     var route = null;
+    var coordinates = null;
+    var marker = null;
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -91,6 +94,19 @@
         socket.emit('callTraceRoute', start.value, end.value);
     }
 
+    function callTracePoints() {
+        if (coordinates != null) {
+            simpleCoords = [];
+            let incr = Math.floor(coordinates.length / 3);
+            for (let i = 0; i < coordinates.length; i = i + incr) {
+                simpleCoords.push(coordinates[i]);
+            }
+            socket.emit('callTracePoints', simpleCoords);
+        } else {
+            console.log("pas de route");
+        }
+    }
+
     socket.on('vehicules', (vec) => {
         vehicules = vec;
         for (let i = 0; i < vehicules.length; i++) {
@@ -107,9 +123,17 @@
     })
 
     socket.on('traceRoute', (coords, lon, lat) => {
+        coordinates = coords;
         route = L.polyline(coords);
         route.addTo(map);
         map.setView([lat, lon], 5)
+    })
+
+    socket.on('traceBornes', (bornes) => {
+        for (let i = 0; i < bornes.length; i++) {
+            console.log(bornes[i].fields);
+            marker = new L.marker([bornes[i].fields.xlongitude, bornes[i].fields.ylatitude]).addTo(map);
+        }
     })
 </script>
 
